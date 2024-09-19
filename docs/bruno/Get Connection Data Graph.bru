@@ -1,0 +1,11 @@
+meta {
+  name: Get Connection Data Graph
+  type: http
+  seq: 4
+}
+
+get {
+  url: https://{{BASE_URL}}/llu/connections/{{PATIENT_ID}}/graph
+  body: none
+  auth: inherit
+}

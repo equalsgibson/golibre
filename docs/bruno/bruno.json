@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "golibre",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

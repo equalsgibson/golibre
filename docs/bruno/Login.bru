@@ -1,0 +1,32 @@
+meta {
+  name: Login
+  type: http
+  seq: 2
+}
+
+post {
+  url: https://{{BASE_URL}}/llu/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "{{EMAIL}}",
+    "password": "{{PASSWORD}}a"
+  }
+}
+
+script:post-response {
+  function onResponse(res) {
+    const data = res.getBody()
+    // Libreview returns 200OK for all responses, and changes the "status" property of their response instead
+    // 0 = OK
+    // 2 = Not Authenticated
+    if (data.status === 0) {
+      bru.setEnvVar("JWT_TOKEN", data.data.authTicket.token)
+    }
+  }
+  
+  onResponse(res)
+}

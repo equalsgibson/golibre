@@ -1,0 +1,20 @@
+meta {
+  name: Get Connection Data
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://{{BASE_URL}}/llu/connections
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  function onResponse(res) {
+    const data = res.getBody()
+    bru.setEnvVar("PATIENT_ID", data.data[0].patientId)
+  }
+  
+  onResponse(res)
+}
