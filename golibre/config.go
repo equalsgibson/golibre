@@ -10,9 +10,9 @@ import (
 type configOption func(s *config)
 
 type config struct {
-	roundTripper         http.RoundTripper
-	userAgent            string
+	transport            *http.Transport
 	timeout              time.Duration
+	userAgent            string
 	requestPreProcessors []RequestPreProcessor
 }
 
@@ -26,21 +26,21 @@ func (p RequestPreProcessorFunc) ProcessRequest(r *http.Request) error {
 	return p(r)
 }
 
-func WithRoundTripper(roundTripper http.RoundTripper) configOption {
+func WithTLSInsecureSkipVerify() configOption {
 	return func(s *config) {
-		s.roundTripper = roundTripper
+		s.transport.TLSClientConfig.InsecureSkipVerify = true
 	}
 }
 
-func SetTimeout(timeout time.Duration) configOption {
+func SetCustomTimeout(customTimeout time.Duration) configOption {
 	return func(s *config) {
-		s.timeout = timeout
+		s.timeout = customTimeout
 	}
 }
 
-func WithUserAgent(userAgent string) configOption {
+func SetCustomUserAgent(customUserAgent string) configOption {
 	return func(s *config) {
-		s.userAgent = userAgent
+		s.userAgent = customUserAgent
 	}
 }
 

@@ -10,7 +10,7 @@ type LoginData struct {
 	Messages           map[string]any `json:"messages"`
 	Notifications      map[string]any `json:"notifications"`
 	AuthTicket         AuthTicket     `json:"authTicket"`
-	Invitations        map[string]any `json:"invitations"`
+	Invitations        []any          `json:"invitations"`
 	TrustedDeviceToken string         `json:"trustedDeviceToken"`
 }
 

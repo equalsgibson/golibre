@@ -2,6 +2,8 @@ package golibre
 
 import (
 	"context"
+	"crypto/tls"
+	"net"
 	"net/http"
 	"sync"
 	"time"
@@ -12,16 +14,30 @@ type Service struct {
 	connectionService *ConnectionService
 }
 
-const DefaultHTTPClientTimeout = time.Second * 15
+const defaultHTTPClientTimeout = time.Second * 15
 
 func NewService(
-	subDomain string,
+	apiURL string,
 	auth Authentication,
 	opts ...configOption,
 ) *Service {
 	config := &config{
-		userAgent: "equalsgibson/golibre",
-		timeout:   DefaultHTTPClientTimeout,
+		transport: &http.Transport{
+			Proxy: http.ProxyFromEnvironment,
+			DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+				return (&net.Dialer{
+					Timeout:   30 * time.Second,
+					KeepAlive: 30 * time.Second,
+				}).DialContext(ctx, network, addr)
+			},
+			ForceAttemptHTTP2:     true,
+			MaxIdleConns:          100,
+			IdleConnTimeout:       90 * time.Second,
+			TLSHandshakeTimeout:   10 * time.Second,
+			ExpectContinueTimeout: 1 * time.Second,
+			TLSClientConfig:       &tls.Config{},
+		},
+		timeout: defaultHTTPClientTimeout,
 	}
 
 	for _, opt := range opts {
@@ -30,10 +46,11 @@ func NewService(
 
 	c := &client{
 		httpClient: &http.Client{
-			Transport: config.roundTripper,
+			Transport: config.transport,
+			Timeout:   config.timeout,
 		},
-		userAgent: config.userAgent,
-		subDomain: subDomain,
+		authentication: auth,
+		apiURL:         apiURL,
 		jwt: jwtAuth{
 			mutex: &sync.Mutex{},
 		},
@@ -41,6 +58,9 @@ func NewService(
 
 	return &Service{
 		client: c,
+		connectionService: &ConnectionService{
+			client: c,
+		},
 	}
 }
 

@@ -1,4 +1,4 @@
 {
-	"email": "{{EMAIL}}",
-	"password": "{{PASSWORD}}"
+	"email": "EMAIL",
+	"password": "VALID_PASSWORD"
 }

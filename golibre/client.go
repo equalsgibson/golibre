@@ -12,7 +12,7 @@ import (
 type client struct {
 	httpClient           *http.Client
 	userAgent            string
-	subDomain            string
+	apiURL               string
 	requestPreProcessors []RequestPreProcessor
 	authentication       Authentication
 	jwt                  jwtAuth
@@ -25,7 +25,7 @@ type jwtAuth struct {
 
 func (c *client) do(request *http.Request, target any) error {
 	if request.URL.Host == "" {
-		request.URL.Host = fmt.Sprintf("%s.libreview.io", c.subDomain)
+		request.URL.Host = c.apiURL
 	}
 
 	request.URL.Scheme = "https"
