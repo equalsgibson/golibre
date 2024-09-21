@@ -15,6 +15,7 @@ import (
 
 const validPassword string = "VALID_PASSWORD"
 const validEmail string = "EMAIL"
+const validJWTToken string = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMzQ1Njc4LTEyMzQtMTIzNC0xMjM0LTQ2MDRhNjdiN2FiNCIsImZpcnN0TmFtZSI6IlNvbWUiLCJsYXN0TmFtZSI6Ik9uZSIsImNvdW50cnkiOiJHQiIsInJlZ2lvbiI6ImV1MiIsInJvbGUiOiJwYXRpZW50IiwidW5pdHMiOjAsInByYWN0aWNlcyI6W10sImMiOjEsInMiOiJsbHUuYW5kcm9pZCIsImV4cCI6MTc0MjI5NDIwN30.ilRwCINRf6nQViQ9c0BLZD9x21qsiBx43EzMk1POTuk"
 
 func newTestServer(t *testing.T) (*httptest.Server, error) {
 	t.Helper()
@@ -69,9 +70,9 @@ func newTestServer(t *testing.T) (*httptest.Server, error) {
 
 	// Connections endpoint
 	testServeMux.HandleFunc("/llu/connections", func(w http.ResponseWriter, r *http.Request) {
-		// Validate that on login, we are not sending an Authorization header
-		if r.Header.Get("Authorization") != "" {
-			t.Logf("Authorization header was present, with value: %s", r.Header.Get("Authorization"))
+		// Validate that we have a valid JWT Token
+		if r.Header.Get("Authorization") != validJWTToken {
+			t.Logf("Authorization header was present, but JWT Token was invalid: %s", r.Header.Get("Authorization"))
 			notAuthenticated(w)
 
 			return
