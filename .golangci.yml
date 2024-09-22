@@ -1,0 +1,16 @@
+linters: 
+  enable-all: true
+  disable:
+    - lll
+    - funlen
+    - mnd
+    - gomnd
+    - exhaustruct
+
+linters-settings:
+  depguard:
+    rules:
+      main:
+        list-mode: lax
+        allow:
+          - github.com/equalsgibson/golibre/golibre

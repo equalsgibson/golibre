@@ -13,11 +13,13 @@ import (
 	"github.com/equalsgibson/golibre/golibre"
 )
 
-const validPassword string = "VALID_PASSWORD"
-const validEmail string = "EMAIL"
-const validJWTToken string = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMzQ1Njc4LTEyMzQtMTIzNC0xMjM0LTQ2MDRhNjdiN2FiNCIsImZpcnN0TmFtZSI6IlNvbWUiLCJsYXN0TmFtZSI6Ik9uZSIsImNvdW50cnkiOiJHQiIsInJlZ2lvbiI6ImV1MiIsInJvbGUiOiJwYXRpZW50IiwidW5pdHMiOjAsInByYWN0aWNlcyI6W10sImMiOjEsInMiOiJsbHUuYW5kcm9pZCIsImV4cCI6MTc0MjI5NDIwN30.ilRwCINRf6nQViQ9c0BLZD9x21qsiBx43EzMk1POTuk"
+const (
+	validPassword string = "VALID_PASSWORD"
+	validEmail    string = "EMAIL"
+	validJWTToken string = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMzQ1Njc4LTEyMzQtMTIzNC0xMjM0LTQ2MDRhNjdiN2FiNCIsImZpcnN0TmFtZSI6IlNvbWUiLCJsYXN0TmFtZSI6Ik9uZSIsImNvdW50cnkiOiJHQiIsInJlZ2lvbiI6ImV1MiIsInJvbGUiOiJwYXRpZW50IiwidW5pdHMiOjAsInByYWN0aWNlcyI6W10sImMiOjEsInMiOiJsbHUuYW5kcm9pZCIsImV4cCI6MTc0MjI5NDIwN30.ilRwCINRf6nQViQ9c0BLZD9x21qsiBx43EzMk1POTuk" // #nosec G101 Fake Token For Test
+)
 
-func newTestServer(t *testing.T) (*httptest.Server, error) {
+func newTestServer(t *testing.T) *httptest.Server {
 	t.Helper()
 
 	testServeMux := http.NewServeMux()
@@ -65,43 +67,23 @@ func newTestServer(t *testing.T) (*httptest.Server, error) {
 			return
 		}
 
-		w.Write(validResponse)
+		_, err = w.Write(validResponse)
+		if err != nil {
+			panic(err)
+		}
 	})
 
 	// Connections endpoint
 	testServeMux.HandleFunc("/llu/connections", func(w http.ResponseWriter, r *http.Request) {
 		// Validate that we have a valid JWT Token
-		if r.Header.Get("Authorization") != validJWTToken {
+		if r.Header.Get("Authorization") != "Bearer "+validJWTToken {
 			t.Logf("Authorization header was present, but JWT Token was invalid: %s", r.Header.Get("Authorization"))
 			notAuthenticated(w)
 
 			return
 		}
 
-		body, err := io.ReadAll(r.Body)
-		if err != nil {
-			t.Logf("Error reading Request Body: %s", err.Error())
-			notAuthenticated(w)
-
-			return
-		}
-
-		target := &golibre.Authentication{}
-		if err := json.Unmarshal(body, target); err != nil {
-			t.Logf("Error unmarshalling Request Body: %s", err.Error())
-			notAuthenticated(w)
-
-			return
-		}
-
-		if target.Email != validEmail || target.Password != validPassword {
-			t.Logf("Invalid email or password: E: %s, P: %s", target.Email, target.Password)
-			notAuthenticated(w)
-
-			return
-		}
-
-		validResponse, err := os.ReadFile("./test_files/client/response/login_successful.json")
+		validResponse, err := os.ReadFile("./test_files/connection/response/get_200.json")
 		if err != nil {
 			t.Logf("Error while serving valid response: %s", err.Error())
 			notAuthenticated(w)
@@ -109,7 +91,10 @@ func newTestServer(t *testing.T) (*httptest.Server, error) {
 			return
 		}
 
-		w.Write(validResponse)
+		_, err = w.Write(validResponse)
+		if err != nil {
+			panic(err)
+		}
 	})
 
 	// Add the handlers to an unstarted server
@@ -122,11 +107,12 @@ func newTestServer(t *testing.T) (*httptest.Server, error) {
 	srv.TLS.InsecureSkipVerify = true
 
 	// Return the server to the caller
-	return srv, nil
+	return srv
 }
 
 func getTestServerAddress(testSrv *httptest.Server) string {
 	url := testSrv.URL
+
 	return strings.TrimPrefix(url, "https://")
 }
 
@@ -144,7 +130,10 @@ func notAuthenticated(w http.ResponseWriter) {
 	}
 
 	// As of Go 1.17, Write() automatically sends http.StatusOK.
-	w.Write(notAuthenticatedErrorBytes)
+	_, err = w.Write(notAuthenticatedErrorBytes)
+	if err != nil {
+		panic(err)
+	}
 }
 
 type RoundTripper struct {

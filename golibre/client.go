@@ -3,6 +3,7 @@ package golibre
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -54,18 +55,40 @@ func (c *client) do(request *http.Request, target any) error {
 	}
 	defer response.Body.Close()
 
+	if response.StatusCode >= http.StatusBadRequest {
+		return fmt.Errorf("network request error: %d", response.StatusCode)
+	}
+
 	bodyBytes, err := io.ReadAll(response.Body)
 	if err != nil {
 		return err
 	}
 
-	if response.StatusCode >= http.StatusBadRequest {
-		// If the status is Bad Request, wipe out the Cached JWT data and attempt to reauthenticate once.
+	// NOTE: Libreview API returns HTTP Status OK for every request, and changes the "status" field
+	// in the response body based on the success / failure of a request.
+	type statusCheck struct {
+		Status StatusCode `json:"status"`
+	}
+
+	var status statusCheck
+	if err := json.Unmarshal(bodyBytes, &status); err != nil {
+		return err
+	}
+
+	switch status.Status {
+	case StatusOK:
+		if target != nil {
+			if err := json.Unmarshal(bodyBytes, target); err != nil {
+				return err
+			}
+		}
+
+		return nil
+
+	case StatusUnauthenticated:
 		c.jwt.rawToken = ""
 
-		if err := c.addAuthentication(request); err != nil {
-			return err
-		}
+		return errors.New("error auth")
 	}
 
 	if target != nil {
@@ -87,7 +110,7 @@ func (c *client) Do(request *http.Request, target any) error {
 
 func (c *client) addAuthentication(r *http.Request) error {
 	if c.jwt.rawToken != "" {
-		r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.jwt.rawToken))
+		r.Header.Set("Authorization", "Bearer "+c.jwt.rawToken)
 
 		return nil
 	}
@@ -115,14 +138,13 @@ func (c *client) addAuthentication(r *http.Request) error {
 	}
 
 	target := LoginResponse{}
-
 	if err := c.do(req, &target); err != nil {
 		return err
 	}
 
 	c.jwt.rawToken = target.Data.AuthTicket.Token
 
-	r.Header.Set("Bearer", c.jwt.rawToken)
+	r.Header.Set("Authorization", "Bearer "+c.jwt.rawToken)
 
 	return nil
 }

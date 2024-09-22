@@ -7,7 +7,7 @@ import (
 	"github.com/equalsgibson/golibre/golibre"
 )
 
-func TestClientLogin_200(t *testing.T) {
+func TestConnection_GetData_200(t *testing.T) {
 	t.Parallel()
 
 	srv := newTestServer(t)
@@ -24,8 +24,14 @@ func TestClientLogin_200(t *testing.T) {
 
 	ctx := context.Background()
 
-	_, err := testService.Connection().GetConnectionData(ctx)
+	data, err := testService.Connection().GetConnectionData(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	if len(data) != 1 {
+		t.Fatal(data)
+	}
+
+	t.Fatal("got to end   ", data)
 }
