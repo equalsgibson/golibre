@@ -36,7 +36,7 @@ func NewService(
 			TLSHandshakeTimeout:   10 * time.Second,
 			ExpectContinueTimeout: 1 * time.Second,
 			TLSClientConfig: &tls.Config{
-				MinVersion: tls.TLS_AES_128_GCM_SHA256,
+				MinVersion: tls.VersionTLS13,
 			},
 		},
 		timeout: defaultHTTPClientTimeout,

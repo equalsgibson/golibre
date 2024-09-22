@@ -3,7 +3,6 @@ package golibre
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -66,16 +65,15 @@ func (c *client) do(request *http.Request, target any) error {
 
 	// NOTE: Libreview API returns HTTP Status OK for every request, and changes the "status" field
 	// in the response body based on the success / failure of a request.
-	type statusCheck struct {
-		Status StatusCode `json:"status"`
+	responseErr := APIError{
+		RawResponse: response,
 	}
 
-	var status statusCheck
-	if err := json.Unmarshal(bodyBytes, &status); err != nil {
+	if err := json.Unmarshal(bodyBytes, &responseErr); err != nil {
 		return err
 	}
 
-	switch status.Status {
+	switch responseErr.Status {
 	case StatusOK:
 		if target != nil {
 			if err := json.Unmarshal(bodyBytes, target); err != nil {
@@ -88,16 +86,12 @@ func (c *client) do(request *http.Request, target any) error {
 	case StatusUnauthenticated:
 		c.jwt.rawToken = ""
 
-		return errors.New("error auth")
-	}
+		return &responseErr
 
-	if target != nil {
-		if err := json.Unmarshal(bodyBytes, target); err != nil {
-			return err
-		}
+	default:
+		// Unknown status code, return the response error if possible
+		return &responseErr
 	}
-
-	return nil
 }
 
 func (c *client) Do(request *http.Request, target any) error {

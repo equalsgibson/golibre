@@ -117,20 +117,13 @@ func getTestServerAddress(testSrv *httptest.Server) string {
 }
 
 func notAuthenticated(w http.ResponseWriter) {
-	notAuthenticatedError := golibre.ErrorResponse{
-		Status: 2,
-		Error: golibre.ErrorMessage{
-			Message: "notAuthenticated",
-		},
-	}
-
-	notAuthenticatedErrorBytes, err := json.Marshal(notAuthenticatedError)
+	response, err := os.ReadFile("./test_files/error/response/error_unauthenticated.json")
 	if err != nil {
 		panic(err)
 	}
 
 	// As of Go 1.17, Write() automatically sends http.StatusOK.
-	_, err = w.Write(notAuthenticatedErrorBytes)
+	_, err = w.Write(response)
 	if err != nil {
 		panic(err)
 	}

@@ -25,15 +25,6 @@ type AuthTicket struct {
 	Duration uint64 `json:"duration"`
 }
 
-type ErrorResponse struct {
-	Status uint         `json:"status"`
-	Error  ErrorMessage `json:"error"`
-}
-
-type ErrorMessage struct {
-	Message string `json:"message"`
-}
-
 type ConnectionResponse struct {
 	Status uint             `json:"status"`
 	Data   []ConnectionData `json:"data"`
@@ -111,18 +102,18 @@ type AlarmRules struct {
 }
 
 type AlarmRuleH struct {
-	TH   uint    `json:"th"`
-	THMM float32 `json:"thmm"`
-	D    uint    `json:"d"`
-	F    float32 `json:"f"`
+	TargetHigh     uint    `json:"th"`
+	TargetHighMMoL float32 `json:"thmm"`
+	D              uint    `json:"d"`
+	F              float32 `json:"f"`
 }
 
 type AlarmRule struct {
-	TH   uint    `json:"th"`
-	THMM float32 `json:"thmm"`
-	D    uint    `json:"d"`
-	TL   uint    `json:"tl"`
-	TLMM uint    `json:"tlmm"`
+	TargetHigh     uint    `json:"th"`
+	TargetHighMMoL float32 `json:"thmm"`
+	D              uint    `json:"d"`
+	TargetLow      uint    `json:"tl"`
+	TargetLowMMoL  float32 `json:"tlmm"`
 }
 
 type AlarmRuleND struct {
