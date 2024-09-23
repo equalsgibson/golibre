@@ -17,6 +17,8 @@ const (
 	validPassword string = "VALID_PASSWORD"
 	validEmail    string = "EMAIL"
 	validJWTToken string = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMzQ1Njc4LTEyMzQtMTIzNC0xMjM0LTQ2MDRhNjdiN2FiNCIsImZpcnN0TmFtZSI6IlNvbWUiLCJsYXN0TmFtZSI6Ik9uZSIsImNvdW50cnkiOiJHQiIsInJlZ2lvbiI6ImV1MiIsInJvbGUiOiJwYXRpZW50IiwidW5pdHMiOjAsInByYWN0aWNlcyI6W10sImMiOjEsInMiOiJsbHUuYW5kcm9pZCIsImV4cCI6MTc0MjI5NDIwN30.ilRwCINRf6nQViQ9c0BLZD9x21qsiBx43EzMk1POTuk" // #nosec G101 Fake Token For Test
+
+	validPatientID golibre.PatientID = "87654321-4321-4321-4321-0242ac110002"
 )
 
 func newTestServer(t *testing.T) *httptest.Server {
@@ -83,7 +85,37 @@ func newTestServer(t *testing.T) *httptest.Server {
 			return
 		}
 
-		validResponse, err := os.ReadFile("./test_files/connection/response/get_200.json")
+		validResponse, err := os.ReadFile("./test_files/connection/response/getAllConnectionData_200.json")
+		if err != nil {
+			t.Logf("Error while serving valid response: %s", err.Error())
+			notAuthenticated(w)
+
+			return
+		}
+
+		_, err = w.Write(validResponse)
+		if err != nil {
+			panic(err)
+		}
+	})
+
+	// ConnectionGraph endpoint
+	testServeMux.HandleFunc("/llu/connections/{patientID}/graph", func(w http.ResponseWriter, r *http.Request) {
+		// Validate that we have a valid JWT Token
+		if r.Header.Get("Authorization") != "Bearer "+validJWTToken {
+			t.Logf("Authorization header was present, but JWT Token was invalid: %s", r.Header.Get("Authorization"))
+			notAuthenticated(w)
+
+			return
+		}
+
+		if r.PathValue("patientID") != string(validPatientID) {
+			w.WriteHeader(http.StatusMethodNotAllowed)
+
+			return
+		}
+
+		validResponse, err := os.ReadFile("./test_files/connection/response/getConnectionGraph_200.json")
 		if err != nil {
 			t.Logf("Error while serving valid response: %s", err.Error())
 			notAuthenticated(w)

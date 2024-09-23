@@ -5,7 +5,11 @@ meta {
 }
 
 get {
-  url: https://{{BASE_URL}}/llu/connections/{{PATIENT_ID}}/graph
+  url: https://{{BASE_URL}}/llu/connections/:patientID/graph
   body: none
   auth: inherit
+}
+
+params:path {
+  patientID: {{PATIENT_ID}}
 }

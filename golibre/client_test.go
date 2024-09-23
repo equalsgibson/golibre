@@ -24,7 +24,7 @@ func TestClientLogin_200(t *testing.T) {
 
 	ctx := context.Background()
 
-	_, err := testService.Connection().GetConnectionData(ctx)
+	_, err := testService.Connection().GetAllConnectionData(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}

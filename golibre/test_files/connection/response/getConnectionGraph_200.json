@@ -1,0 +1,177 @@
+{
+	"status": 0,
+	"data": {
+		"connection": {
+			"id": "12345678-1234-1234-1234-4604a67b7ab4",
+			"patientId": "87654321-4321-4321-4321-0242ac110002",
+			"country": "GB",
+			"status": 2,
+			"firstName": "SomeOne",
+			"lastName": "Else",
+			"targetLow": 70,
+			"targetHigh": 180,
+			"uom": 0,
+			"sensor": {
+				"deviceId": "",
+				"sn": "0AA5YPR9J0",
+				"a": 1726590000,
+				"w": 60,
+				"pt": 4,
+				"s": false,
+				"lj": false
+			},
+			"alarmRules": {
+				"c": true,
+				"h": {
+					"th": 250,
+					"thmm": 13.9,
+					"d": 1440,
+					"f": 0.1
+				},
+				"f": {
+					"th": 55,
+					"thmm": 3,
+					"d": 30,
+					"tl": 10,
+					"tlmm": 0.6
+				},
+				"l": {
+					"th": 70,
+					"thmm": 3.9,
+					"d": 1440,
+					"tl": 10,
+					"tlmm": 0.6
+				},
+				"nd": {
+					"i": 20,
+					"r": 5,
+					"l": 6
+				},
+				"p": 5,
+				"r": 5,
+				"std": {}
+			},
+			"glucoseMeasurement": {
+				"FactoryTimestamp": "9/22/2024 8:49:02 PM",
+				"Timestamp": "9/22/2024 9:49:02 PM",
+				"type": 1,
+				"ValueInMgPerDl": 114,
+				"TrendArrow": 3,
+				"TrendMessage": null,
+				"MeasurementColor": 1,
+				"GlucoseUnits": 0,
+				"Value": 6.3,
+				"isHigh": false,
+				"isLow": false
+			},
+			"glucoseItem": {
+				"FactoryTimestamp": "9/22/2024 8:49:02 PM",
+				"Timestamp": "9/22/2024 9:49:02 PM",
+				"type": 1,
+				"ValueInMgPerDl": 114,
+				"TrendArrow": 3,
+				"TrendMessage": null,
+				"MeasurementColor": 1,
+				"GlucoseUnits": 0,
+				"Value": 6.3,
+				"isHigh": false,
+				"isLow": false
+			},
+			"glucoseAlarm": null,
+			"patientDevice": {
+				"did": "abcdefg-abcd-abcd-abcd-a20cf1532aef",
+				"dtid": 40068,
+				"v": "3.5.0.8863",
+				"ll": 70,
+				"hl": 250,
+				"u": 1721678358,
+				"fixedLowAlarmValues": {
+					"mgdl": 60,
+					"mmoll": 3.3
+				},
+				"alarms": true,
+				"fixedLowThreshold": 0
+			},
+			"created": 1720130312
+		},
+		"activeSensors": [
+			{
+				"sensor": {
+					"deviceId": "12345678-1234-1234-1234-a20cf1532aef",
+					"sn": "0AA5YPR9J0",
+					"a": 1726590000,
+					"w": 60,
+					"pt": 4,
+					"s": false,
+					"lj": false
+				},
+				"device": {
+					"did": "abcdefg-abcd-abcd-abcd-a20cf1532aef",
+					"dtid": 40068,
+					"v": "3.5.0.8863",
+					"l": true,
+					"ll": 70,
+					"hl": 250,
+					"u": 1726947584,
+					"fixedLowAlarmValues": {
+						"mgdl": 60,
+						"mmoll": 3.3
+					},
+					"alarms": true,
+					"fixedLowThreshold": 70
+				}
+			}
+		],
+		"graphData": [
+			{
+				"FactoryTimestamp": "9/22/2024 8:51:13 AM",
+				"Timestamp": "9/22/2024 9:51:13 AM",
+				"type": 0,
+				"ValueInMgPerDl": 193,
+				"MeasurementColor": 2,
+				"GlucoseUnits": 0,
+				"Value": 10.7,
+				"isHigh": false,
+				"isLow": false
+			},
+			{
+				"FactoryTimestamp": "9/22/2024 8:56:13 AM",
+				"Timestamp": "9/22/2024 9:56:13 AM",
+				"type": 0,
+				"ValueInMgPerDl": 195,
+				"MeasurementColor": 2,
+				"GlucoseUnits": 0,
+				"Value": 10.8,
+				"isHigh": false,
+				"isLow": false
+			},
+			{
+				"FactoryTimestamp": "9/22/2024 9:01:13 AM",
+				"Timestamp": "9/22/2024 10:01:13 AM",
+				"type": 0,
+				"ValueInMgPerDl": 202,
+				"MeasurementColor": 2,
+				"GlucoseUnits": 0,
+				"Value": 11.2,
+				"isHigh": false,
+				"isLow": false
+			},
+			{
+				"FactoryTimestamp": "9/22/2024 9:06:13 AM",
+				"Timestamp": "9/22/2024 10:06:13 AM",
+				"type": 0,
+				"ValueInMgPerDl": 205,
+				"MeasurementColor": 2,
+				"GlucoseUnits": 0,
+				"Value": 11.4,
+				"isHigh": false,
+				"isLow": false
+			}
+		]
+	},
+	"ticket": {
+		"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMzQ1Njc4LTEyMzQtMTIzNC0xMjM0LTQ2MDRhNjdiN2FiNCIsImZpcnN0TmFtZSI6IlNvbWUiLCJsYXN0TmFtZSI6Ik9uZSIsImNvdW50cnkiOiJHQiIsInJlZ2lvbiI6ImV1MiIsInJvbGUiOiJwYXRpZW50IiwidW5pdHMiOjAsInByYWN0aWNlcyI6W10sImMiOjEsInMiOiJsbHUuYW5kcm9pZCIsImV4cCI6MTc0MjI5NDIwN30.ilRwCINRf6nQViQ9c0BLZD9x21qsiBx43EzMk1POTuk",
+		"expires": 1742294207,
+		"duration": 15552000000
+	}
+}
