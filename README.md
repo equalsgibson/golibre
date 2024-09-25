@@ -5,7 +5,7 @@
 
 <p align="center">
   <picture>
-    <img src="https://equalsgibson.github.io/golibre/golibre.png" width="512" height="512" alt="golibre logo">
+    <img src="https://equalsgibson.github.io/golibre/resources/golibre.png" width="512" height="512" alt="golibre logo">
   </picture>
     <br>
     <strong>Easily access Glucose Measurement data from the FreeStyle Libre systems</strong>
@@ -119,11 +119,11 @@ Project Link: [https://github.com/equalsgibson/golibre](https://github.com/equal
 
 [golang]: https://img.shields.io/badge/v1.21-000?logo=go&logoColor=fff&labelColor=444&color=%2300ADD8
 [golang-url]: https://go.dev/
-[coverage]: https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fequalsgibson.github.io%2Ffive9-go%2Fcoverage%2Fcoverage.json&query=%24.total&label=Coverage
-[coverage-url]: https://equalsgibson.github.io/five9-go/coverage/coverage.html
-[goaction]: https://github.com/equalsgibson/five9-go/actions/workflows/go.yml/badge.svg?branch=main
-[goaction-url]: https://github.com/equalsgibson/five9-go/actions/workflows/go.yml
-[goref]: https://pkg.go.dev/badge/github.com/equalsgibson/five9-go.svg
-[goref-url]: https://pkg.go.dev/github.com/equalsgibson/five9-go
-[goreport]: https://goreportcard.com/badge/github.com/equalsgibson/five9-go
-[goreport-url]: https://goreportcard.com/report/github.com/equalsgibson/five9-go
+[coverage]: https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fequalsgibson.github.io%2Fgolibre%2Fcoverage%2Fcoverage.json&query=%24.total&label=Coverage
+[coverage-url]: https://equalsgibson.github.io/golibre/coverage/coverage.html
+[goaction]: https://github.com/equalsgibson/golibre/actions/workflows/go.yml/badge.svg?branch=main
+[goaction-url]: https://github.com/equalsgibson/golibre/actions/workflows/go.yml
+[goref]: https://pkg.go.dev/badge/github.com/equalsgibson/golibre.svg
+[goref-url]: https://pkg.go.dev/github.com/equalsgibson/golibre
+[goreport]: https://goreportcard.com/badge/github.com/equalsgibson/golibre
+[goreport-url]: https://goreportcard.com/report/github.com/equalsgibson/golibre
