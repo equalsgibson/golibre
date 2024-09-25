@@ -33,17 +33,17 @@
 
 ### Prerequisites  
 
-Download and install Go, version 1.21+, from the [official Go website](https://go.dev/doc/install).
+Download and install Go, version 1.22+, from the [official Go website](https://go.dev/doc/install).
 
 ### Install  
 
 ```shell
-go get github.com/equalsgibson/five9-go
+go get github.com/equalsgibson/golibre@latest
 ```
 
-#### Get the Glucose Data of a single patient
+#### Get the Connections shared with your account
 
-Below is a short example showing how to list all the users within your Five9 Domain using the library.
+Below is a short example showing how to get the connections from your account
 
 > **Note**  
 > Make sure to `go get` the library, and set the required ENV variables (`LIBRELINKUP_EMAIL` and `LIBRELINKUP_PASSWORD`) before running the below example.
