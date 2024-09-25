@@ -1,0 +1,13 @@
+version: '3'
+
+dotenv: ['.env']
+
+tasks:
+  build:
+    cmds:
+      - go generate ./...
+      - go build -v ./...
+
+  test:
+    cmds:
+      - ./ops/scripts/test.sh
