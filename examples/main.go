@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 
@@ -25,9 +26,9 @@ func main() {
 	}
 
 	// Print a count of all the patients that you are connected to, with a list of patient IDs
-	log.Printf("You have %d patients that are sharing their data with you.\n\n", len(connections))
+	fmt.Printf("You have %d patients that are sharing their data with you.\n", len(connections))
 
 	for i, connection := range connections {
-		log.Printf("\tPatient %d: %s\n", i, connection.PatientID)
+		fmt.Printf("\t-> Patient %d: ID: %s\n", i+1, connection.PatientID)
 	}
 }

@@ -30,16 +30,11 @@ func (c *client) do(request *http.Request, target any) error {
 
 	request.URL.Scheme = "https"
 
-	// Optional
-	request.Header.Set("Accept", "application/json")
-	request.Header.Set("User-Agent", c.userAgent)
-
 	// Required
-	request.Header.Set("Accept-Encoding", "gzip")
-	request.Header.Set("Cache-Control", "no-cache")
-	request.Header.Set("Content-Type", "application/json")
-	request.Header.Set("Product", "llu.android")
-	request.Header.Set("Version", "4.8.0")
+	request.Header.Set("cache-control", "no-cache")
+	request.Header.Set("content-type", "application/json")
+	request.Header.Set("product", "llu.android")
+	request.Header.Set("version", "4.8.0")
 
 	for _, requestPreProcessor := range c.requestPreProcessors {
 		if err := requestPreProcessor.ProcessRequest(request); err != nil {

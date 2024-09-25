@@ -1,7 +1,7 @@
 <!-- markdownlint-configure-file { "MD004": { "style": "consistent" } } -->
 <!-- markdownlint-disable MD033 -->
 
-#
+# golibre
 
 <p align="center">
   <picture>
@@ -76,12 +76,19 @@ func main() {
 	}
 
 	// Print a count of all the patients that you are connected to, with a list of patient IDs
-	log.Printf("You have %d patients that are sharing their data with you.\n\n", len(connections))
+	fmt.Printf("You have %d patients that are sharing their data with you.\n", len(connections))
 
 	for i, connection := range connections {
-		log.Printf("\tPatient %d: %s\n", i, connection.PatientID)
+		fmt.Printf("\t-> Patient %d: ID: %s\n", i+1, connection.PatientID)
 	}
 }
+```  
+
+Expected Output:  
+```bash
+cgibson@wsl-ubuntuNexus:~/git/libre/golibre$ go run examples/main.go 
+You have 1 patients that are sharing their data with you.
+        -> Patient 1: ID: 12345678-1234-1234-abcd-0242ac110002
 ```
 
 <!-- CONTRIBUTING -->
@@ -95,7 +102,7 @@ Don't forget to give the project a star! Thanks again!
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+3. Commit your Changes (`git add . && git commit -am 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
@@ -117,12 +124,10 @@ Project Link: [https://github.com/equalsgibson/golibre](https://github.com/equal
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[golang]: https://img.shields.io/badge/v1.21-000?logo=go&logoColor=fff&labelColor=444&color=%2300ADD8
+[golang]: https://img.shields.io/badge/v1.22-000?logo=go&logoColor=fff&labelColor=444&color=%2300ADD8
 [golang-url]: https://go.dev/
 [coverage]: https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fequalsgibson.github.io%2Fgolibre%2Fcoverage%2Fcoverage.json&query=%24.total&label=Coverage
 [coverage-url]: https://equalsgibson.github.io/golibre/coverage/coverage.html
-[goaction]: https://github.com/equalsgibson/golibre/actions/workflows/go.yml/badge.svg?branch=main
-[goaction-url]: https://github.com/equalsgibson/golibre/actions/workflows/go.yml
 [goref]: https://pkg.go.dev/badge/github.com/equalsgibson/golibre.svg
 [goref-url]: https://pkg.go.dev/github.com/equalsgibson/golibre
 [goreport]: https://goreportcard.com/badge/github.com/equalsgibson/golibre
