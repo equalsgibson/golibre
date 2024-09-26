@@ -51,15 +51,9 @@ func (c *ConnectionService) GetConnectionGraph(ctx context.Context, patientID Pa
 	return target.Data, nil
 }
 
-type ConnectionResponse[data []ConnectionData | ConnectionGraphData] struct {
-	Status uint       `json:"status"`
-	Data   data       `json:"data"`
-	Ticket AuthTicket `json:"ticket"`
-}
+type ConnectionGraphResponse BaseResponse[ConnectionGraphData]
 
-type ConnectionGraphResponse ConnectionResponse[ConnectionGraphData]
-
-type GetAllConnectionsResponse ConnectionResponse[[]ConnectionData]
+type GetAllConnectionsResponse BaseResponse[[]ConnectionData]
 
 type ConnectionGraphData struct {
 	Connection    ConnectionData            `json:"connection"`

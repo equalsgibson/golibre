@@ -2,7 +2,6 @@ package golibre_test
 
 import (
 	"encoding/json"
-	"errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -21,15 +20,107 @@ const (
 	validPatientID golibre.PatientID = "87654321-4321-4321-4321-0242ac110002"
 )
 
+func authenticatedRequestMiddleware(t *testing.T, next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Header.Get("Authorization") != "Bearer "+validJWTToken {
+			t.Logf("Authorization header was present, but JWT Token was invalid: %s", r.Header.Get("Authorization"))
+			notAuthenticated(w)
+
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
 func newTestServer(t *testing.T) *httptest.Server {
 	t.Helper()
 
 	testServeMux := http.NewServeMux()
 
+	// Private Endpoints
+	// -> User endpoint
+	testServeMux.Handle("/user", authenticatedRequestMiddleware(t, userHandler(t)))
+	// -> Account endpoint
+	testServeMux.Handle("/account", authenticatedRequestMiddleware(t, userHandler(t)))
+	// -> Connections endpoint
+	testServeMux.Handle("/llu/connections", authenticatedRequestMiddleware(t, connectionHandler(t)))
+	// -> ConnectionGraph endpoint
+	testServeMux.Handle("/llu/connections/{patientID}/graph", authenticatedRequestMiddleware(t, connectionGraphHandler(t)))
+
+	// Public Endpoints
+	// -> Authentication endpoint
+	testServeMux.HandleFunc("/llu/auth/login", loginHandler(t))
 	testServeMux.HandleFunc("/", http.NotFound)
 
-	// Authentication endpoint
-	testServeMux.HandleFunc("/llu/auth/login", func(w http.ResponseWriter, r *http.Request) {
+	// Add the handlers to an unstarted server
+	srv := httptest.NewUnstartedServer(
+		testServeMux,
+	)
+
+	// Set the TLS Config to skip the verify step, as this is a local test and outside the scope of the requirements
+	srv.StartTLS()
+	srv.TLS.InsecureSkipVerify = true
+
+	// Return the server to the caller
+	return srv
+}
+
+func getTestServerAddress(testSrv *httptest.Server) string {
+	url := testSrv.URL
+
+	return strings.TrimPrefix(url, "https://")
+}
+
+func notAuthenticated(w http.ResponseWriter) {
+	response, err := os.ReadFile("./test_files/error/response/error_unauthenticated.json")
+	if err != nil {
+		panic(err)
+	}
+
+	// As of Go 1.17, Write() automatically sends http.StatusOK.
+	_, err = w.Write(response)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func userHandler(t *testing.T) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		validResponse, err := os.ReadFile("./test_files/user/response/get_200.json")
+		if err != nil {
+			t.Logf("Error while reading response file: %s", err.Error())
+
+			panic(err)
+		}
+
+		_, err = w.Write(validResponse)
+		if err != nil {
+			t.Logf("Error while writing response bytes: %s", err.Error())
+
+			panic(err)
+		}
+	})
+}
+
+func accountHandler(t *testing.T) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		validResponse, err := os.ReadFile("./test_files/account/response/get_200.json")
+		if err != nil {
+			t.Logf("Error while serving valid response: %s", err.Error())
+
+			panic(err)
+		}
+
+		_, err = w.Write(validResponse)
+		if err != nil {
+			panic(err)
+		}
+	})
+}
+
+func loginHandler(t *testing.T) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Validate that on login, we are not sending an Authorization header
 		if r.Header.Get("Authorization") != "" {
 			t.Logf("Authorization header was present, with value: %s", r.Header.Get("Authorization"))
@@ -74,17 +165,10 @@ func newTestServer(t *testing.T) *httptest.Server {
 			panic(err)
 		}
 	})
+}
 
-	// Connections endpoint
-	testServeMux.HandleFunc("/llu/connections", func(w http.ResponseWriter, r *http.Request) {
-		// Validate that we have a valid JWT Token
-		if r.Header.Get("Authorization") != "Bearer "+validJWTToken {
-			t.Logf("Authorization header was present, but JWT Token was invalid: %s", r.Header.Get("Authorization"))
-			notAuthenticated(w)
-
-			return
-		}
-
+func connectionHandler(t *testing.T) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		validResponse, err := os.ReadFile("./test_files/connection/response/getAllConnectionData_200.json")
 		if err != nil {
 			t.Logf("Error while serving valid response: %s", err.Error())
@@ -98,17 +182,10 @@ func newTestServer(t *testing.T) *httptest.Server {
 			panic(err)
 		}
 	})
+}
 
-	// ConnectionGraph endpoint
-	testServeMux.HandleFunc("/llu/connections/{patientID}/graph", func(w http.ResponseWriter, r *http.Request) {
-		// Validate that we have a valid JWT Token
-		if r.Header.Get("Authorization") != "Bearer "+validJWTToken {
-			t.Logf("Authorization header was present, but JWT Token was invalid: %s", r.Header.Get("Authorization"))
-			notAuthenticated(w)
-
-			return
-		}
-
+func connectionGraphHandler(t *testing.T) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.PathValue("patientID") != string(validPatientID) {
 			w.WriteHeader(http.StatusMethodNotAllowed)
 
@@ -128,63 +205,4 @@ func newTestServer(t *testing.T) *httptest.Server {
 			panic(err)
 		}
 	})
-
-	// Add the handlers to an unstarted server
-	srv := httptest.NewUnstartedServer(
-		testServeMux,
-	)
-
-	// Set the TLS Config to skip the verify step, as this is a local test and outside the scope of the requirements
-	srv.StartTLS()
-	srv.TLS.InsecureSkipVerify = true
-
-	// Return the server to the caller
-	return srv
-}
-
-func getTestServerAddress(testSrv *httptest.Server) string {
-	url := testSrv.URL
-
-	return strings.TrimPrefix(url, "https://")
-}
-
-func notAuthenticated(w http.ResponseWriter) {
-	response, err := os.ReadFile("./test_files/error/response/error_unauthenticated.json")
-	if err != nil {
-		panic(err)
-	}
-
-	// As of Go 1.17, Write() automatically sends http.StatusOK.
-	_, err = w.Write(response)
-	if err != nil {
-		panic(err)
-	}
-}
-
-type RoundTripper struct {
-	RoundTripFunc func(*http.Request) (*http.Response, error)
-}
-
-func (r RoundTripper) RoundTrip(request *http.Request) (*http.Response, error) {
-	return r.RoundTripFunc(request)
-}
-
-type RoundTripFunc func(t *testing.T, request *http.Request) (*http.Response, error)
-
-func RoundTripperQueue(t *testing.T, queue []RoundTripFunc) http.RoundTripper {
-	runNumber := 0
-
-	return RoundTripper{
-		RoundTripFunc: func(r *http.Request) (*http.Response, error) {
-			defer func() {
-				runNumber++
-			}()
-
-			if len(queue) <= runNumber {
-				return nil, errors.New("empty queue")
-			}
-
-			return queue[runNumber](t, r)
-		},
-	}
 }

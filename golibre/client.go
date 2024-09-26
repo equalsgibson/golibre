@@ -141,3 +141,9 @@ type Authentication struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
+
+type BaseResponse[data []ConnectionData | ConnectionGraphData | UserData | AccountDetailData] struct {
+	Status uint       `json:"status"`
+	Data   data       `json:"data"`
+	Ticket AuthTicket `json:"ticket"`
+}

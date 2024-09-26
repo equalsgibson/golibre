@@ -11,7 +11,9 @@ import (
 
 type Service struct {
 	client            *client
+	accountService    *AccountService
 	connectionService *ConnectionService
+	userService       *UserService
 }
 
 const defaultHTTPClientTimeout = time.Second * 15
@@ -60,16 +62,26 @@ func NewService(
 
 	return &Service{
 		client: c,
+		accountService: &AccountService{
+			client: c,
+		},
 		connectionService: &ConnectionService{
+			client: c,
+		},
+		userService: &UserService{
 			client: c,
 		},
 	}
 }
 
-func (s *Service) GetMetadata(ctx context.Context) error {
-	return nil
-}
-
 func (s *Service) Connection() *ConnectionService {
 	return s.connectionService
+}
+
+func (s *Service) User() *UserService {
+	return s.userService
+}
+
+func (s *Service) Account() *AccountService {
+	return s.accountService
 }

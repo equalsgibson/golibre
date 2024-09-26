@@ -33,7 +33,12 @@
 
 ### Prerequisites  
 
-Download and install Go, version 1.22+, from the [official Go website](https://go.dev/doc/install).
+- Download and install Go, version 1.22+, from the [official Go website](https://go.dev/doc/install).  
+- If you do not already have a LibreLinkUp account, create one by downloading the LibreLinkUp App from the [iOS App Store](https://apps.apple.com/us/app/librelinkup/id1234323923) or [Google Play Store](https://play.google.com/store/apps/details?id=org.nativescript.LibreLinkUp)
+
+
+> [!TIP] 
+> To make sure that your account credentials will work with the library, you can download the [bruno](https://www.usebruno.com/) application or the [Postman](https://www.postman.com/) application and test the requests manually.  
 
 ### Install  
 
@@ -45,7 +50,7 @@ go get github.com/equalsgibson/golibre@latest
 
 Below is a short example showing how to get the connections from your account
 
-> **Note**  
+> [!NOTE] 
 > Make sure to `go get` the library, and set the required ENV variables (`LIBRELINKUP_EMAIL` and `LIBRELINKUP_PASSWORD`) before running the below example.
 
 ```go
