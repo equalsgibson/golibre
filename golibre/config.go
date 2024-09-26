@@ -4,15 +4,13 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
-	"time"
 )
 
 type configOption func(s *config)
 
 type config struct {
-	transport            *http.Transport
-	timeout              time.Duration
-	userAgent            string
+	transport *http.Transport
+
 	requestPreProcessors []RequestPreProcessor
 }
 
@@ -29,18 +27,6 @@ func (p RequestPreProcessorFunc) ProcessRequest(r *http.Request) error {
 func WithTLSInsecureSkipVerify() configOption {
 	return func(s *config) {
 		s.transport.TLSClientConfig.InsecureSkipVerify = true
-	}
-}
-
-func SetCustomTimeout(customTimeout time.Duration) configOption {
-	return func(s *config) {
-		s.timeout = customTimeout
-	}
-}
-
-func SetCustomUserAgent(customUserAgent string) configOption {
-	return func(s *config) {
-		s.userAgent = customUserAgent
 	}
 }
 

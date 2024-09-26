@@ -16,8 +16,6 @@ type Service struct {
 	userService       *UserService
 }
 
-const defaultHTTPClientTimeout = time.Second * 15
-
 func NewService(
 	apiURL string,
 	auth Authentication,
@@ -41,7 +39,6 @@ func NewService(
 				MinVersion: tls.VersionTLS13,
 			},
 		},
-		timeout: defaultHTTPClientTimeout,
 	}
 
 	for _, opt := range opts {
@@ -51,7 +48,7 @@ func NewService(
 	c := &client{
 		httpClient: &http.Client{
 			Transport: config.transport,
-			Timeout:   config.timeout,
+			Timeout:   15 * time.Second,
 		},
 		authentication: auth,
 		apiURL:         apiURL,
