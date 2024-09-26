@@ -1,0 +1,45 @@
+{
+	"status": 0,
+	"data": {
+		"user": {
+			"id": "12345678-1234-1234-1234-4604a67b7ab4",
+			"firstName": "Some",
+			"lastName": "One",
+			"dateOfBirth": 123456,
+			"email": "someone+libre@gmail.com",
+			"country": "GB",
+			"uiLanguage": "en-US",
+			"communicationLanguage": "en-US",
+			"accountType": "pat",
+			"uom": "0",
+			"dateFormat": "2",
+			"timeFormat": "2",
+			"emailDay": [1],
+			"system": {
+				"messages": {
+					"appReviewBanner": 1720130314,
+					"firstUsePhoenix": 1720130262,
+					"firstUsePhoenixReportsDataMerged": 1720130262,
+					"lluGettingStartedBanner": 1720130318,
+					"lluNewFeatureModal": 1720130302,
+					"lluOnboarding": 1720130310,
+					"lvWebPostRelease": "3.18.15"
+				}
+			},
+			"details": {},
+			"twoFactor": {
+				"primaryMethod": "phone",
+				"primaryValue": "+44 1234567891",
+				"secondaryMethod": "email",
+				"secondaryValue": "someone+libre@gmail.com"
+			},
+			"created": 1720130262,
+			"lastLogin": 1727345530
+		}
+	},
+	"ticket": {
+		"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMzQ1Njc4LTEyMzQtMTIzNC0xMjM0LTQ2MDRhNjdiN2FiNCIsImZpcnN0TmFtZSI6IlNvbWUiLCJsYXN0TmFtZSI6Ik9uZSIsImNvdW50cnkiOiJHQiIsInJlZ2lvbiI6ImV1MiIsInJvbGUiOiJwYXRpZW50IiwidW5pdHMiOjAsInByYWN0aWNlcyI6W10sImMiOjEsInMiOiJsbHUuYW5kcm9pZCIsImV4cCI6MTc0MjI5NDIwN30.ilRwCINRf6nQViQ9c0BLZD9x21qsiBx43EzMk1POTuk",
+		"expires": 1742294207,
+		"duration": 15552000000
+	}
+}
