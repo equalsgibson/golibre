@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -euxo pipefail
+
 mkdir -p ./ops/docs/coverage/
 go install github.com/boumenot/gocover-cobertura@latest
 go test -p 1 -count=1 -cover -coverprofile ./ops/docs/coverage/coverage-profile.txt ./golibre/...
