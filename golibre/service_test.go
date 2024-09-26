@@ -87,7 +87,7 @@ func notAuthenticated(w http.ResponseWriter) {
 
 func userHandler(t *testing.T) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		validResponse, err := os.ReadFile("./test_files/user/response/get_200.json")
+		validResponse, err := os.ReadFile("./test_files/user/response/getUserData_200.json")
 		if err != nil {
 			t.Logf("Error while reading response file: %s", err.Error())
 

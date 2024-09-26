@@ -31,6 +31,7 @@ func TestConnection_GetLoggedInUser_200(t *testing.T) {
 			FirstName:             "Some",
 			LastName:              "One",
 			Email:                 "someone+libre@gmail.com",
+			DateOfBirth:           123456,
 			Country:               "GB",
 			UILanguage:            "en-US",
 			CommunicationLanguage: "en-US",
