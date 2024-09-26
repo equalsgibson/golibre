@@ -42,7 +42,7 @@ func newTestServer(t *testing.T) *httptest.Server {
 	// -> User endpoint
 	testServeMux.Handle("/user", authenticatedRequestMiddleware(t, userHandler(t)))
 	// -> Account endpoint
-	testServeMux.Handle("/account", authenticatedRequestMiddleware(t, userHandler(t)))
+	testServeMux.Handle("/account", authenticatedRequestMiddleware(t, accountHandler(t)))
 	// -> Connections endpoint
 	testServeMux.Handle("/llu/connections", authenticatedRequestMiddleware(t, connectionHandler(t)))
 	// -> ConnectionGraph endpoint
@@ -105,7 +105,7 @@ func userHandler(t *testing.T) http.Handler {
 
 func accountHandler(t *testing.T) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		validResponse, err := os.ReadFile("./test_files/account/response/get_200.json")
+		validResponse, err := os.ReadFile("./test_files/account/response/getAccountDetails_200.json")
 		if err != nil {
 			t.Logf("Error while serving valid response: %s", err.Error())
 
