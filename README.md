@@ -60,6 +60,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"fmt"
 
 	"github.com/equalsgibson/golibre/golibre"
 )
