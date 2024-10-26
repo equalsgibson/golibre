@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"sync"
 	"time"
+
+	"github.com/equalsgibson/golibre/golibre/internal"
 )
 
 type Service struct {
@@ -53,7 +55,7 @@ func NewService(
 		authentication: auth,
 		apiURL:         apiURL,
 		jwt: jwtAuth{
-			mutex: &sync.Mutex{},
+			mutex: &sync.RWMutex{},
 		},
 	}
 
@@ -64,6 +66,7 @@ func NewService(
 		},
 		connectionService: &ConnectionService{
 			client: c,
+			store:  internal.NewSimpleStore[PatientID, []GraphGlucoseMeasurement](),
 		},
 		userService: &UserService{
 			client: c,

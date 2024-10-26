@@ -20,7 +20,7 @@ type client struct {
 
 type jwtAuth struct {
 	rawToken string
-	mutex    *sync.Mutex
+	mutex    *sync.RWMutex
 }
 
 func (c *client) do(request *http.Request, target any) error {
@@ -103,8 +103,8 @@ func (c *client) addAuthentication(r *http.Request) error {
 		return nil
 	}
 
-	c.jwt.mutex.Lock()
-	defer c.jwt.mutex.Unlock()
+	c.jwt.mutex.RLock()
+	defer c.jwt.mutex.RUnlock()
 
 	if c.jwt.rawToken != "" {
 		return nil
@@ -130,7 +130,9 @@ func (c *client) addAuthentication(r *http.Request) error {
 		return err
 	}
 
+	c.jwt.mutex.Lock()
 	c.jwt.rawToken = target.Data.AuthTicket.Token
+	c.jwt.mutex.Unlock()
 
 	r.Header.Set("Authorization", "Bearer "+c.jwt.rawToken)
 

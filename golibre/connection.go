@@ -3,10 +3,14 @@ package golibre
 import (
 	"context"
 	"net/http"
+	"time"
+
+	"github.com/equalsgibson/golibre/golibre/internal"
 )
 
 type ConnectionService struct {
 	client *client
+	store  *internal.SimpleStore[PatientID, []GraphGlucoseMeasurement]
 }
 
 func (c *ConnectionService) GetAllConnectionData(ctx context.Context) ([]ConnectionData, error) {
@@ -49,6 +53,43 @@ func (c *ConnectionService) GetConnectionGraph(ctx context.Context, patientID Pa
 	}
 
 	return target.Data, nil
+}
+
+func (c *ConnectionService) RegisterConnectionInStore(ctx context.Context, patientID PatientID, updateInterval time.Duration) error {
+	patientData, err := c.GetConnectionGraph(ctx, patientID)
+	if err != nil {
+		return err
+	}
+
+	newConnection := map[PatientID][]GraphGlucoseMeasurement{
+		patientData.Connection.PatientID: patientData.GraphData,
+	}
+
+	c.store.Set(newConnection)
+
+	return nil
+}
+
+func (c *ConnectionService) UnregisterConnectionInStore(ctx context.Context, patientID PatientID) {
+	c.store.Evict(patientID)
+}
+
+func (c *ConnectionService) pollRegisteredConnections(ctx context.Context) error {
+	registeredConnections := c.store.GetAll(ctx)
+	updatedData := make(map[PatientID][]GraphGlucoseMeasurement, len(registeredConnections))
+
+	for registeredConnection := range registeredConnections {
+		data, err := c.GetConnectionGraph(ctx, registeredConnection)
+		if err != nil {
+			return err
+		}
+
+		updatedData[registeredConnection] = data.GraphData
+	}
+
+	c.store.Set(updatedData)
+
+	return nil
 }
 
 type ConnectionGraphResponse BaseResponse[ConnectionGraphData]
