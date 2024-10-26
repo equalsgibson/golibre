@@ -2,6 +2,7 @@ package golibre
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -97,18 +98,32 @@ func (c *client) Do(request *http.Request, target any) error {
 }
 
 func (c *client) addAuthentication(r *http.Request) error {
-	if c.jwt.rawToken != "" {
-		r.Header.Set("Authorization", "Bearer "+c.jwt.rawToken)
+	if token, tokenExists := c.checkForAuthToken(); tokenExists {
+		r.Header.Set("Authorization", "Bearer "+token)
 
 		return nil
 	}
 
+	if err := c.getNewAuthToken(r.Context()); err != nil {
+		return err
+	}
+
+	return c.addAuthentication(r)
+}
+
+func (c *client) checkForAuthToken() (authToken string, authTokenExists bool) {
 	c.jwt.mutex.RLock()
 	defer c.jwt.mutex.RUnlock()
 
-	if c.jwt.rawToken != "" {
-		return nil
-	}
+	authToken = c.jwt.rawToken
+	authTokenExists = authToken != ""
+
+	return authToken, authTokenExists
+}
+
+func (c *client) getNewAuthToken(ctx context.Context) error {
+	c.jwt.mutex.Lock()
+	defer c.jwt.mutex.Unlock()
 
 	authenticationRequestBody, err := json.Marshal(c.authentication)
 	if err != nil {
@@ -116,7 +131,7 @@ func (c *client) addAuthentication(r *http.Request) error {
 	}
 
 	req, err := http.NewRequestWithContext(
-		r.Context(),
+		ctx,
 		http.MethodPost,
 		"/llu/auth/login",
 		bytes.NewReader(authenticationRequestBody),
@@ -130,11 +145,7 @@ func (c *client) addAuthentication(r *http.Request) error {
 		return err
 	}
 
-	c.jwt.mutex.Lock()
 	c.jwt.rawToken = target.Data.AuthTicket.Token
-	c.jwt.mutex.Unlock()
-
-	r.Header.Set("Authorization", "Bearer "+c.jwt.rawToken)
 
 	return nil
 }
