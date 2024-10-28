@@ -79,6 +79,9 @@ func (c *client) do(request *http.Request, target any) error {
 		return nil
 
 	case StatusUnauthenticated:
+		c.jwt.mutex.Lock()
+		defer c.jwt.mutex.Unlock()
+
 		c.jwt.rawToken = ""
 
 		return &responseErr
@@ -133,21 +136,66 @@ func (c *client) getNewAuthToken(ctx context.Context) error {
 	req, err := http.NewRequestWithContext(
 		ctx,
 		http.MethodPost,
-		"/llu/auth/login",
+		fmt.Sprintf("https://%s/llu/auth/login", c.apiURL),
 		bytes.NewReader(authenticationRequestBody),
 	)
 	if err != nil {
 		return err
 	}
 
-	target := LoginResponse{}
-	if err := c.do(req, &target); err != nil {
+	// Required
+	req.Header.Set("cache-control", "no-cache")
+	req.Header.Set("content-type", "application/json")
+	req.Header.Set("product", "llu.android")
+	req.Header.Set("version", "4.8.0")
+
+	for _, requestPreProcessor := range c.requestPreProcessors {
+		if err := requestPreProcessor.ProcessRequest(req); err != nil {
+			return err
+		}
+	}
+
+	response, err := c.httpClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode >= http.StatusBadRequest {
+		return fmt.Errorf("network request error: %d", response.StatusCode)
+	}
+
+	bodyBytes, err := io.ReadAll(response.Body)
+	if err != nil {
 		return err
 	}
 
-	c.jwt.rawToken = target.Data.AuthTicket.Token
+	target := LoginResponse{}
+	responseErr := APIError{
+		RawResponse: response,
+	}
 
-	return nil
+	if err := json.Unmarshal(bodyBytes, &responseErr); err != nil {
+		return err
+	}
+
+	switch responseErr.Status {
+	case StatusOK:
+		if err := json.Unmarshal(bodyBytes, &target); err != nil {
+			return err
+		}
+
+		c.jwt.rawToken = target.Data.AuthTicket.Token
+
+		return nil
+
+	case StatusUnauthenticated:
+		return &responseErr
+
+	default:
+		// Unknown status code, return the response error if possible
+		return &responseErr
+	}
 }
 
 type Authentication struct {
