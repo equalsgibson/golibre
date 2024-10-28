@@ -53,7 +53,7 @@ Below is a short example showing how to get the connections from your account
 > [!NOTE]
 > Make sure to `go get` the library, and set the required ENV variables (`EMAIL` and `PASSWORD`) before running the below example.
 
-https://github.com/equalsgibson/golibre/blob/59176f70461221b2e021caf02e574bf3816a40de/examples/main.go
+https://github.com/equalsgibson/golibre/blob/59176f70461221b2e021caf02e574bf3816a40de/examples/main.go#L1-L34
 
 Expected Output:
 
