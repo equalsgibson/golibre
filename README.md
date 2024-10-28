@@ -14,9 +14,9 @@
 
 <!-- markdownlint-enable MD033 -->
 
--   **Easy to use**: Get up and running with the library in minutes
+- **Easy to use**: Get up and running with the library in minutes
 
--   **Actively developed**: Ideas and contributions welcomed!
+- **Actively developed**: Ideas and contributions welcomed!
 
 ---
 
@@ -29,70 +29,36 @@
 
 </div>
 
-## Getting Started  
+## Getting Started
 
-### Prerequisites  
+### Prerequisites
 
-- Download and install Go, version 1.22+, from the [official Go website](https://go.dev/doc/install).  
+- Download and install Go, version 1.22+, from the [official Go website](https://go.dev/doc/install).
 - If you do not already have a LibreLinkUp account, create one by downloading the LibreLinkUp App from the [iOS App Store](https://apps.apple.com/us/app/librelinkup/id1234323923) or [Google Play Store](https://play.google.com/store/apps/details?id=org.nativescript.LibreLinkUp)
 
+> [!TIP]
+> To make sure that your account credentials will work with the library, you can download the [bruno](https://www.usebruno.com/) application or the [Postman](https://www.postman.com/) application and test the requests manually.
+> If you choose to download and use bruno, see the ./ops/docs/bruno folder for example requests.
 
-> [!TIP] 
-> To make sure that your account credentials will work with the library, you can download the [bruno](https://www.usebruno.com/) application or the [Postman](https://www.postman.com/) application and test the requests manually.  
-
-### Install  
+### Install
 
 ```shell
-go get github.com/equalsgibson/golibre@latest
+go get github.com/equalsgibson/golibre@v0.0.2-alpha
 ```
 
 #### Get the Connections shared with your account
 
 Below is a short example showing how to get the connections from your account
 
-> [!NOTE] 
-> Make sure to `go get` the library, and set the required ENV variables (`LIBRELINKUP_EMAIL` and `LIBRELINKUP_PASSWORD`) before running the below example.
+> [!NOTE]
+> Make sure to `go get` the library, and set the required ENV variables (`EMAIL` and `PASSWORD`) before running the below example.
 
-```go
-package main
+https://github.com/equalsgibson/golibre/blob/59176f70461221b2e021caf02e574bf3816a40de/examples/main.go
 
-import (
-	"context"
-	"log"
-	"os"
-	"fmt"
+Expected Output:
 
-	"github.com/equalsgibson/golibre/golibre"
-)
-
-func main() {
-	// Set up a new golibre service
-	ctx := context.Background()
-	service := golibre.NewService(
-		"api.libreview.io",
-		golibre.Authentication{
-			Email:    os.Getenv("LIBRELINKUP_EMAIL"),    // Your email address
-			Password: os.Getenv("LIBRELINKUP_PASSWORD"), // Your password
-		},
-	)
-
-	connections, err := service.Connection().GetAllConnectionData(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Print a count of all the patients that you are connected to, with a list of patient IDs
-	fmt.Printf("You have %d patients that are sharing their data with you.\n", len(connections))
-
-	for i, connection := range connections {
-		fmt.Printf("\t-> Patient %d: ID: %s\n", i+1, connection.PatientID)
-	}
-}
-```  
-
-Expected Output:  
 ```bash
-cgibson@wsl-ubuntuNexus:~/git/libre/golibre$ go run examples/main.go 
+cgibson@wsl-ubuntuNexus:~/git/libre/golibre$ go run examples/main.go
 You have 1 patients that are sharing their data with you.
         -> Patient 1: ID: 12345678-1234-1234-abcd-0242ac110002
 ```
@@ -125,7 +91,6 @@ Distributed under a GNU License. See the `LICENSE` file for more information.
 [Chris Gibson (@equalsgibson)](https://github.com/equalsgibson)
 
 Project Link: [https://github.com/equalsgibson/golibre](https://github.com/equalsgibson/golibre)
-
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

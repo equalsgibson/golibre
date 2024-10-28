@@ -53,7 +53,7 @@ func NewService(
 		authentication: auth,
 		apiURL:         apiURL,
 		jwt: jwtAuth{
-			mutex: &sync.Mutex{},
+			mutex: &sync.RWMutex{},
 		},
 	}
 
