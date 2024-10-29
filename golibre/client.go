@@ -128,6 +128,12 @@ func (c *client) getNewAuthToken(ctx context.Context) error {
 	c.jwt.mutex.Lock()
 	defer c.jwt.mutex.Unlock()
 
+	// NOTE: Assuming >1 thread requesting refresh, ensure that after first thread unlocks,
+	// subsequent threads check the JWT Token before requesting a new token
+	if c.jwt.rawToken != "" {
+		return nil
+	}
+
 	authenticationRequestBody, err := json.Marshal(c.authentication)
 	if err != nil {
 		return err
