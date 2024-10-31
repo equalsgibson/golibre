@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/equalsgibson/golibre/golibre"
+	"github.com/equalsgibson/golibre"
 )
 
 func TestClientLogin_200(t *testing.T) {

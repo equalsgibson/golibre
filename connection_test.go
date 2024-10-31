@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/equalsgibson/golibre/golibre"
+	"github.com/equalsgibson/golibre"
 )
 
 func TestConnection_GetAllConnections_200(t *testing.T) {

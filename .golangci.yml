@@ -13,4 +13,4 @@ linters-settings:
       main:
         list-mode: lax
         allow:
-          - github.com/equalsgibson/golibre/golibre
+          - github.com/equalsgibson/golibre

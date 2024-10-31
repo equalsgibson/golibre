@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+const LibreViewAPIURL string = "api.libreview.io"
+
 type Service struct {
 	client            *client
 	accountService    *AccountService
@@ -53,7 +55,8 @@ func NewService(
 		authentication: auth,
 		apiURL:         apiURL,
 		jwt: jwtAuth{
-			mutex: &sync.RWMutex{},
+			rawToken: config.existingJWTToken,
+			mutex:    &sync.RWMutex{},
 		},
 	}
 
