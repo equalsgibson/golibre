@@ -9,8 +9,8 @@ import (
 type configOption func(s *config)
 
 type config struct {
-	transport *http.Transport
-
+	transport            *http.Transport
+	existingJWTToken     string
 	requestPreProcessors []RequestPreProcessor
 }
 
@@ -22,6 +22,12 @@ type RequestPreProcessorFunc func(*http.Request) error
 
 func (p RequestPreProcessorFunc) ProcessRequest(r *http.Request) error {
 	return p(r)
+}
+
+func WithExistingJWTToken(existingToken string) configOption {
+	return func(s *config) {
+		s.existingJWTToken = existingToken
+	}
 }
 
 func WithTLSInsecureSkipVerify() configOption {

@@ -5,10 +5,10 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/equalsgibson/golibre/golibre"
+	"github.com/equalsgibson/golibre"
 )
 
-func TestConnection_GetAccountDetails_200(t *testing.T) {
+func TestConnection_GetLoggedInUser_200(t *testing.T) {
 	t.Parallel()
 
 	srv := newTestServer(t)
@@ -25,13 +25,13 @@ func TestConnection_GetAccountDetails_200(t *testing.T) {
 
 	ctx := context.Background()
 
-	expected := golibre.AccountDetailData{
-		User: golibre.UserAccountData{
+	expected := golibre.UserData{
+		User: golibre.User{
 			ID:                    "12345678-1234-1234-1234-4604a67b7ab4",
 			FirstName:             "Some",
 			LastName:              "One",
-			DateOfBirth:           123456,
 			Email:                 "someone+libre@gmail.com",
+			DateOfBirth:           123456,
 			Country:               "GB",
 			UILanguage:            "en-US",
 			CommunicationLanguage: "en-US",
@@ -60,10 +60,42 @@ func TestConnection_GetAccountDetails_200(t *testing.T) {
 			},
 			Created:   1720130262,
 			LastLogin: 1727345530,
+			Programs:  map[string]any{},
+			Devices:   map[string]any{},
+			Consents: golibre.Consents{
+				LLU: golibre.LLUConsent{
+					PolicyAccept: 1720130262,
+					TOUAccept:    1727258891,
+				},
+				RealWorldEvidence: golibre.RealWorldEvidenceConsent{
+					PolicyAccept: 1727044734,
+					TOUAccept:    0,
+					History: []golibre.PolicyAccept{
+						{
+							PolicyAccept: 1727044734,
+						},
+					},
+				},
+			},
 		},
+		Messages: golibre.Messages{
+			Unread: 0,
+		},
+		Notifications: golibre.Notifications{
+			Unresolved: 0,
+		},
+		AuthTicket: golibre.AuthTicket{
+			Token:    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMzQ1Njc4LTEyMzQtMTIzNC0xMjM0LTQ2MDRhNjdiN2FiNCIsImZpcnN0TmFtZSI6IlNvbWUiLCJsYXN0TmFtZSI6Ik9uZSIsImNvdW50cnkiOiJHQiIsInJlZ2lvbiI6ImV1MiIsInJvbGUiOiJwYXRpZW50IiwidW5pdHMiOjAsInByYWN0aWNlcyI6W10sImMiOjEsInMiOiJsbHUuYW5kcm9pZCIsImV4cCI6MTc0MjI5NDIwN30.ilRwCINRf6nQViQ9c0BLZD9x21qsiBx43EzMk1POTuk",
+			Expires:  1742294207,
+			Duration: 15552000000,
+		},
+		Invitations: []string{
+			"abcdefg-abcd-abcd-abcd-a20cf1532aef",
+		},
+		TrustedDeviceToken: "",
 	}
 
-	actual, err := testService.Account().GetAccountDetails(ctx)
+	actual, err := testService.User().GetLoggedInUser(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}

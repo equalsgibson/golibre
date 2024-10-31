@@ -130,9 +130,14 @@ func (c *client) getNewAuthToken(ctx context.Context) error {
 
 	// NOTE: Assuming >1 thread requesting refresh, ensure that after first thread unlocks,
 	// subsequent threads check the JWT Token before requesting a new token
+	c.jwt.mutex.RLock()
 	if c.jwt.rawToken != "" {
+		c.jwt.mutex.RUnlock()
+
 		return nil
 	}
+
+	c.jwt.mutex.RUnlock()
 
 	authenticationRequestBody, err := json.Marshal(c.authentication)
 	if err != nil {

@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/equalsgibson/golibre/golibre"
+	"github.com/equalsgibson/golibre"
 )
 
 func main() {

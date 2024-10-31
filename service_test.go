@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/equalsgibson/golibre/golibre"
+	"github.com/equalsgibson/golibre"
 )
 
 const (
